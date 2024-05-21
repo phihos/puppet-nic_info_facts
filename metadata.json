@@ -2,12 +2,12 @@
   "name": "phihos-nic_info_facts",
   "version": "0.1.0",
   "author": "Philipp Hossner",
-  "summary": "",
+  "summary": "Augment your facts with vendor and device info for each interface.",
   "license": "MIT",
-  "source": "",
-  "dependencies": [
-
-  ],
+  "source": "https://github.com/phihos/puppet-nic_info_facts",
+  "project_page": "https://github.com/phihos/puppet-nic_info_facts",
+  "issues_url": "https://github.com/phihos/puppet-nic_info_facts",
+  "dependencies": [],
   "operatingsystem_support": [
     {
       "operatingsystem": "CentOS",
