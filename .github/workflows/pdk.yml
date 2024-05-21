@@ -1,0 +1,28 @@
+name: Run PDK tests
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Build Dependencies
+        run: |
+          wget https://apt.puppet.com/puppet-tools-release-jammy.deb
+          sudo dpkg -i puppet-tools-release-jammy.deb
+          sudo apt-get update
+          sudo apt-get install pdk
+
+      - name: Install PDK Ruby Dependencies
+        run: pdk bundle install
+
+      - name: Validate
+        run: pdk validate
+
+      - name: Run Unit Tests
+        run: pdk test unit
