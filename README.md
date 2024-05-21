@@ -6,12 +6,8 @@ Augment your facts with vendor and device info for each interface.
 
 1. [Description](#description)
 1. [Setup - The basics of getting started with nic_info_facts](#setup)
-    * [What nic_info_facts affects](#what-nic_info_facts-affects)
     * [Setup requirements](#setup-requirements)
-    * [Beginning with nic_info_facts](#beginning-with-nic_info_facts)
 1. [Usage - Configuration options and additional functionality](#usage)
-1. [Limitations - OS compatibility, etc.](#limitations)
-1. [Development - Guide for contributing to the module](#development)
 
 ## Description
 
