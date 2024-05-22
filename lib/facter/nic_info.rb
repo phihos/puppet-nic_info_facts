@@ -43,8 +43,6 @@ Facter.add(:nic_info) do
     pci_id_database = parse_pci_id_database(pci_id_database_content)
     vendor_id_without_hex_prefix = vendor_id.gsub('0x', '').downcase
     device_id_without_hex_prefix = device_id.gsub('0x', '').downcase
-    puts vendor_id_without_hex_prefix
-    puts pci_id_database[vendor_id_without_hex_prefix]
     database_lookup = pci_id_database.dig(vendor_id_without_hex_prefix, device_id_without_hex_prefix)
     return database_lookup['vendor_name'], database_lookup['device_name'] if database_lookup
 
@@ -64,8 +62,6 @@ Facter.add(:nic_info) do
       vendor_id = File.read(vendor_id_path).strip
       device_id =  File.read(device_id_path).strip
       vendor_name, device_name = model_from_ids(vendor_id, device_id)
-      puts vendor_name
-      puts device_name
 
       result[interface] = {
         'vendor_id' => vendor_id,
