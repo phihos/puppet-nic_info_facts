@@ -1,6 +1,6 @@
 {
   "name": "phihos-nic_info_facts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Philipp Hossner",
   "summary": "Augment your facts with vendor and device info for each interface.",
   "license": "MIT",
