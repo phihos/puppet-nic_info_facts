@@ -2,7 +2,7 @@
 
 Facter.add(:nic_info) do
   confine :kernel do |value|
-    value.casecmp('linux').zero?
+    value.downcase == 'linux'
   end
 
   def parse_pci_id_database(db_content)
@@ -22,7 +22,7 @@ Facter.add(:nic_info) do
           'vendor_name' => current_vendor,
           'device_name' => device_name,
         }
-      elsif %r{^[0-9]}.match?(line)
+      elsif !!%r{^[0-9]}.match(line) # Replaced `match?` with `match` and added `!!`
         # case 3: vendor
         # parse ID and name and create an inner node in our data structure
         current_vendor_id, current_vendor = line.strip.split('  ', 2)
@@ -45,18 +45,30 @@ Facter.add(:nic_info) do
       return '', ''
     end
     pci_id_database_content = File.read(pci_id_database_path)
+    # Read the file with UTF-8 encoding to avoid invalid byte sequence errors
+    pci_id_database_content = File.read(pci_id_database_path, encoding: 'UTF-8')
     pci_id_database = parse_pci_id_database(pci_id_database_content)
     vendor_id_without_hex_prefix = vendor_id.gsub('0x', '').downcase
     device_id_without_hex_prefix = device_id.gsub('0x', '').downcase
-    database_lookup = pci_id_database.dig(vendor_id_without_hex_prefix, device_id_without_hex_prefix)
-    return database_lookup['vendor_name'], database_lookup['device_name'] if database_lookup
+
+    # Replace dig with manual lookup because of Ruby 2.0.0 compatibility
+    if pci_id_database[vendor_id_without_hex_prefix] &&
+       pci_id_database[vendor_id_without_hex_prefix][device_id_without_hex_prefix]
+      database_lookup = pci_id_database[vendor_id_without_hex_prefix][device_id_without_hex_prefix]
+      return database_lookup['vendor_name'], database_lookup['device_name']
+    end
 
     ['', '']
   end
 
   setcode do
     result = {}
-    Facter.value(:networking)['interfaces'].each do |interface, _|
+    if Facter.value('facterversion').split('.').first.eql?('2')
+      interface_list = Facter.value('interfaces').split(',')
+    else
+      interface_list = Facter.value(:networking)['interfaces']
+    end
+    interface_list.each do |interface, _|
       sys_path_prefix = "/sys/class/net/#{interface}"
       vendor_id_path = "#{sys_path_prefix}/device/vendor"
       device_id_path = "#{sys_path_prefix}/device/device"
@@ -65,7 +77,7 @@ Facter.add(:nic_info) do
       end
 
       vendor_id = File.read(vendor_id_path).strip
-      device_id =  File.read(device_id_path).strip
+      device_id = File.read(device_id_path).strip
       vendor_name, device_name = model_from_ids(vendor_id, device_id)
 
       result[interface] = {
