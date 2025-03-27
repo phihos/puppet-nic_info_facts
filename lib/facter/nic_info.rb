@@ -37,8 +37,13 @@ Facter.add(:nic_info) do
   end
 
   def model_from_ids(vendor_id, device_id)
-    pci_id_database_path = '/usr/share/misc/pci.ids'
-    return '', '' unless File.file?(pci_id_database_path)
+    if File.file?('/usr/share/misc/pci.ids')
+      pci_id_database_path = '/usr/share/misc/pci.ids'
+    elsif File.file?('/usr/share/hwdata/pci.ids')
+      pci_id_database_path = '/usr/share/hwdata/pci.ids'
+    else
+      return '', ''
+    end
     pci_id_database_content = File.read(pci_id_database_path)
     pci_id_database = parse_pci_id_database(pci_id_database_content)
     vendor_id_without_hex_prefix = vendor_id.gsub('0x', '').downcase
