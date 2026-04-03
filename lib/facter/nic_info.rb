@@ -37,9 +37,9 @@ Facter.add(:nic_info) do
   end
 
   def model_from_ids(vendor_id, device_id)
-    pci_id_database_path = '/usr/share/misc/pci.ids'
-    return '', '' unless File.file?(pci_id_database_path)
-    pci_id_database_content = File.read(pci_id_database_path)
+    pci_id_database_path = ['/usr/share/misc/pci.ids', '/usr/share/hwdata/pci.ids'].find { |path| File.file?(path) }
+    return '', '' unless pci_id_database_path
+    pci_id_database_content = File.read(pci_id_database_path, encoding: 'UTF-8')
     pci_id_database = parse_pci_id_database(pci_id_database_content)
     vendor_id_without_hex_prefix = vendor_id.gsub('0x', '').downcase
     device_id_without_hex_prefix = device_id.gsub('0x', '').downcase
@@ -60,7 +60,7 @@ Facter.add(:nic_info) do
       end
 
       vendor_id = File.read(vendor_id_path).strip
-      device_id =  File.read(device_id_path).strip
+      device_id = File.read(device_id_path).strip
       vendor_name, device_name = model_from_ids(vendor_id, device_id)
 
       result[interface] = {
