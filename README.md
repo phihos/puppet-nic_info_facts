@@ -11,8 +11,8 @@ Augment your facts with vendor and device info for each interface.
 
 ## Description
 
-Puppet's default facts to not expose the model or vendor of a physical NIC.
-This module fetches the vendor ID from `/sys/class/net/<interface>>/device/vendor` and the device ID from `/sys/class/net/eno1/device/device`.
+Puppet's default facts do not expose the model or vendor of a physical NIC.
+This module fetches the vendor ID from `/sys/class/net/<interface>/device/vendor` and the device ID from `/sys/class/net/<interface>/device/device`.
 Additionally it tries to resolve the vendor name and device (model) name from `/usr/share/misc/pci.ids`.
 This approach is really fast compared to tools like `lshw` and does not require any additional binary.
 
