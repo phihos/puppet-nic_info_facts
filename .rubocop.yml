@@ -4,7 +4,8 @@ require:
 - rubocop-rspec
 AllCops:
   DisplayCopNames: true
-  TargetRubyVersion: '2.6'
+  NewCops: disable
+  TargetRubyVersion: '2.7'
   Include:
   - "**/*.rb"
   Exclude:
@@ -116,6 +117,8 @@ Bundler/GemFilename:
 Bundler/InsecureProtocolSource:
   Enabled: false
 Capybara/CurrentPathExpectation:
+  Enabled: false
+Capybara/RSpec/PredicateMatcher:
   Enabled: false
 Capybara/VisibilityMatcher:
   Enabled: false

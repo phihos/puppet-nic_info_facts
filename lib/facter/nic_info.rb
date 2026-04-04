@@ -51,7 +51,7 @@ Facter.add(:nic_info) do
 
   setcode do
     result = {}
-    Facter.value(:networking)['interfaces'].each do |interface, _|
+    Facter.value(:networking)['interfaces'].each_key do |interface|
       sys_path_prefix = "/sys/class/net/#{interface}"
       vendor_id_path = "#{sys_path_prefix}/device/vendor"
       device_id_path = "#{sys_path_prefix}/device/device"
